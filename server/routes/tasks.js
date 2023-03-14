@@ -23,21 +23,15 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.put('/:id', auth, async (req, res) => {
-  try {
-    const task = await Task.findOneAndUpdate(
-      {
-        _id: req.params.id,
-      },
-      req.body
-    );
-    res.send(task);
-  } catch (error) {
-    res.send(error);
-  }
+router.put('/:id', async (req, res) => {
+  const updateTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+
+  res.status(200).json(updateTask);
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const task = await Task.findByIdAndDelete(req.params.id);
   } catch (error) {}

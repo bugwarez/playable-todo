@@ -1,5 +1,8 @@
 import axios from 'axios';
 const apiUrl = 'http://localhost:3005/api/tasks';
+const user = JSON.parse(localStorage.getItem('user'));
+
+console.log('USEER', user.token);
 
 export const addCard = async (task) => {
   const response = await axios.post(apiUrl, task);
@@ -11,9 +14,19 @@ export const getCard = async (id) => {
   return response.data;
 };
 
-export function getTasks() {
-  return axios.get(apiUrl);
-}
+export const updateCard = async (field, data) => {
+  const response = await axios.put(apiUrl + '/' + id, data, {
+    headers: {
+      Authorization: 'Bearer ' + user.token,
+    },
+  });
+
+  if (response.data) {
+    localStorage.setItem('user', JSON.stringify(response.data));
+  }
+
+  return response.data;
+};
 
 export function addTask(task) {
   return axios.post(apiUrl, task);

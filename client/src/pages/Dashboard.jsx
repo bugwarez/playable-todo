@@ -3,37 +3,12 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 //!Components
 import Navbar from '../components/Navbar';
-import { Box, Stack, Button } from '@mui/material';
+import { Box, Stack, Button, TextField } from '@mui/material';
 import TodoCard from '../components/TodoCard';
 import NewDialog from '../components/NewDialog';
 import { getCard } from '../services/taskService';
 
 function Dashboard() {
-  const exampleData = [
-    {
-      id: 0,
-      title: 'Get in Playable Factory',
-      description: 'Hope i will',
-      isDone: true,
-      owner: 112,
-      image:
-        'https://playablefactory.com/wp-content/uploads/2022/01/animated_dark_with_title_logo_pf.gif',
-      tags: ['job', 'hired'],
-      createdAt: new Date(),
-    },
-    {
-      id: 1,
-      title: 'Develop wonderful things',
-      description: 'still Developing',
-      isDone: false,
-      owner: 112,
-      image:
-        'https://playablefactory.com/wp-content/uploads/2022/01/anim1_dark_gear.gif',
-      tags: ['tasks', 'important'],
-      createdAt: new Date(),
-    },
-  ];
-
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -68,12 +43,23 @@ function Dashboard() {
     <>
       <Navbar />
       <NewDialog {...state} />
+      <TextField
+        id='search'
+        label='Search'
+        variant='outlined'
+        name='search'
+        sx={{
+          width: '50vw',
+          marginTop: 5,
+        }}
+      />
       <Box
         sx={{
           width: '100%',
           height: '100%',
           display: 'flex',
           flexDirection: 'row',
+          // background: 'red',
         }}
       >
         <Box

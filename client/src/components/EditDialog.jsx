@@ -10,21 +10,11 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 
 function EditDialog(state) {
-  console.log('state', state);
-
-  const tags_data = [
-    {
-      id: 0,
-      text: 'Work',
-    },
-    {
-      id: 1,
-      text: 'Home',
-    },
-  ];
+  // console.log('EditDialog state', state);
+  // console.log('EditDialog state.title', state.title);
 
   //!Tags
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(state.tags);
 
   function handleKeyDown(e) {
     if (e.key !== 'Enter') return;
@@ -40,7 +30,7 @@ function EditDialog(state) {
 
   //!File upload with preview
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(state.image);
 
   useEffect(() => {
     if (selectedImage) {
@@ -50,6 +40,12 @@ function EditDialog(state) {
 
   console.log('imageUrl', imageUrl);
   console.log('selectedImage', selectedImage);
+
+  const [cardTitle, setCardTitle] = useState(state.title);
+  const [cardDescription, setCardDescription] = useState(state.description);
+
+  //!Attachment upload
+  const [attachmentData, setAttachmentData] = useState(state.attachment);
 
   return (
     <Dialog
@@ -123,18 +119,26 @@ function EditDialog(state) {
               }}
             >
               <TextField
+                InputLabelProps={{ shrink: true }}
                 id='outlined-basic'
                 name='title'
                 label='Title'
                 variant='outlined'
-                defaultValue={'aa'}
+                value={cardTitle}
+                onChange={(e) => {
+                  setCardTitle(e.target.value);
+                }}
               />
               <TextField
+                InputLabelProps={{ shrink: true }}
                 id='outlined-multiline-static'
                 label='Multiline'
                 multiline
                 rows={4}
-                defaultValue='Default Value'
+                value={cardDescription}
+                onChange={(e) => {
+                  setCardDescription(e.target.value);
+                }}
               />
               <label for='attachment'>Attachment:</label>
 
@@ -160,6 +164,7 @@ function EditDialog(state) {
                 />
               ))}
               <TextField
+                InputLabelProps={{ shrink: true }}
                 onKeyDown={handleKeyDown}
                 type='text'
                 sx={{

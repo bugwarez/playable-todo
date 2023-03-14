@@ -28,17 +28,6 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditDialog from './EditDialog';
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
 export default function TodoCard(data) {
   const colors = [
     'primary',
@@ -50,10 +39,19 @@ export default function TodoCard(data) {
   ];
 
   console.log('dataa', data);
+  console.log('data.props.data', data.props.data);
 
   //!Destructuring data
-  const { id, title, description, isDone, owner, image, tags, createdAt } =
-    data.props.data;
+  const {
+    _id,
+    title,
+    description,
+    completed,
+    owner,
+    thumbnail,
+    tags,
+    createdAt,
+  } = data.props.data;
 
   const [open, setOpen] = React.useState(false);
 
@@ -69,23 +67,29 @@ export default function TodoCard(data) {
     open,
     handleClickOpen,
     handleClose,
-    id,
+    _id,
     title,
     description,
-    isDone,
+    completed,
     owner,
-    image,
+    thumbnail,
     tags,
     createdAt,
   };
 
   // console.log('index', index);
+  console.log('image--', thumbnail);
 
   return (
     <>
       <EditDialog {...state} />
       <Card sx={{ width: 300, border: '2px solid #e3e3e3' }}>
-        <CardMedia sx={{ height: 140 }} image={image} title={title} />
+        <CardMedia
+          sx={{ height: 140 }}
+          component='img'
+          image={thumbnail}
+          title={title}
+        />
         <CardContent>
           <Typography gutterBottom variant='h5' component='div'>
             {title}
@@ -133,7 +137,7 @@ export default function TodoCard(data) {
             variant='outlined'
             color='success'
             onClick={() => {
-              console.log(id, isDone);
+              console.log(_id, completed);
             }}
             size='small'
           >

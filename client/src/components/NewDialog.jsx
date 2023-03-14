@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -29,7 +29,7 @@ function EditDialog(state) {
     setTags(tags.filter((el, i) => i !== index));
   }
 
-  //!File upload with preview
+  //!Image upload with preview
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
@@ -44,7 +44,15 @@ function EditDialog(state) {
 
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
+
+  //!File Upload
   const [attachment, setAttachment] = useState();
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      setAttachment(e.target.files[0]);
+    }
+  };
 
   const formState = {
     imageUrl,
@@ -160,7 +168,15 @@ function EditDialog(state) {
               />
               <label htmlFor='attachment'>Attachment:</label>
 
-              <input type='file' id='attachment' name='attachment' />
+              <input
+                type='file'
+                onChange={handleFileChange}
+                id='attachment'
+                name='attachment'
+              />
+              <div>
+                {attachment && `${attachment.name} - ${attachment.type}`}
+              </div>
             </Box>
             <Box
               sx={{
