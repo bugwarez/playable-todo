@@ -48,9 +48,12 @@ export default function TodoCard(data) {
     'info',
     'success',
   ];
+
+  console.log('dataa', data);
+
   //!Destructuring data
   const { id, title, description, isDone, owner, image, tags, createdAt } =
-    data.props;
+    data.props.data;
 
   const [open, setOpen] = React.useState(false);
 
@@ -76,10 +79,12 @@ export default function TodoCard(data) {
     createdAt,
   };
 
+  // console.log('index', index);
+
   return (
     <>
       <EditDialog {...state} />
-      <Card sx={{ maxWidth: 345, border: '2px solid #e3e3e3' }}>
+      <Card sx={{ width: 300, border: '2px solid #e3e3e3' }}>
         <CardMedia sx={{ height: 140 }} image={image} title={title} />
         <CardContent>
           <Typography gutterBottom variant='h5' component='div'>
@@ -94,12 +99,12 @@ export default function TodoCard(data) {
             variant='body2'
             color='text.secondary'
           >
-            {createdAt.toLocaleDateString('tr-TR', {
+            {new Date(createdAt).toLocaleDateString('tr-TR', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
-            })}{' '}
-            tarihinde oluşturuldu
+            })}
+            &nbsp;tarihinde oluşturuldu
           </Typography>
           <Stack direction='row' spacing={1}>
             {tags.map((tag) => {

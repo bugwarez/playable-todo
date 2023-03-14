@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import { Box, Stack, Button } from '@mui/material';
 import TodoCard from '../components/TodoCard';
 import NewDialog from '../components/NewDialog';
-import { getTasks } from '../services/taskService';
+import { getCard } from '../services/taskService';
 
 function Dashboard() {
   const exampleData = [
@@ -50,17 +50,19 @@ function Dashboard() {
     handleClose,
   };
 
+  const user = JSON.parse(localStorage.getItem('user'));
+  console.log('user', user._id);
+
   //!Axios
-  const [dataState, setDataState] = useState();
+  const [dataState, setDataState] = useState([]);
 
   useEffect(() => {
-    const loadData = async () => {
-      const result = await getTasks();
+    getCard('64106cd74f918e0cb0e7fd66').then((result) => {
       setDataState(result);
-    };
-
-    loadData();
+    });
   }, []);
+
+  console.log('dataState', dataState);
 
   return (
     <>
@@ -90,6 +92,7 @@ function Dashboard() {
               justifyContent='space-between'
             >
               <h1>To Do</h1>
+
               <Button
                 color='primary'
                 onClick={handleClickOpen}
@@ -108,8 +111,12 @@ function Dashboard() {
               }}
               gap={2}
             >
-              {exampleData.map((data) => {
-                return <TodoCard props={data} />;
+              {dataState.map((data, index) => {
+                const props = {
+                  data,
+                  index,
+                };
+                return <TodoCard key={index} props={props} />;
               })}
             </Box>
           </Stack>
@@ -133,9 +140,9 @@ function Dashboard() {
               }}
               gap={2}
             >
-              {exampleData.map((data) => {
-                return <TodoCard props={data} />;
-              })}
+              {/* {exampleData.map((data, i) => {
+                return <TodoCard key={i} props={(data, i)} />;
+              })} */}
             </Box>
           </Stack>
         </Box>

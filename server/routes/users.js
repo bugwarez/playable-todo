@@ -8,93 +8,85 @@ const { auth } = require('../auth');
 router.post('/register', async (req, res) => {
   const { fullname, email, password } = req.body;
 
-  try {
-    // check if the user already exists
-    user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ msg: 'User already exists' });
-    }
+  if (!fullname || !email || !password) {
+    res.status(400);
 
-    //! Hashing password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    throw new Error('You must fill all fields');
+  }
 
-    // create new user
-    user = new User({
-      fullname,
-      email,
-      password: hashedPassword,
+  //?Checking duplicate
+  //! Check if email exists
+  const userExists = await User.findOne({ email: email });
+  if (userExists) {
+    res.status(400);
+    throw new Error('Email already exists');
+  }
+  //? END OF Checking duplicate data
+
+  //! Hashing password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
+  //! Create new user
+  const user = await User.create({
+    fullname,
+    email,
+    password: hashedPassword,
+  });
+
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      token: generateToken(user._id),
     });
-
-    await user.save();
-
-    // return jwt
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '7 days' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+  } else {
+    res.status(400);
+    throw new Error('Bir hata oluştu :/');
   }
 });
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400);
+    throw new Error('You must fill all fields');
+  }
 
-  try {
-    // check if the user exists
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ msg: 'Email or password incorrect' });
-    }
+  //! Check for user email
+  const user = await User.findOne({ email: email });
 
-    // check is the encrypted password matches
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: 'Email or password incorrect' });
-    }
-
-    // return jwt
-    const payload = {
-      user: {
-        id: user.id,
-      },
-    };
-
-    jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      { expiresIn: '30 days' },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.status(200).json({
+      _id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(401);
+    throw new Error('E-posta veya şifre hatalı');
   }
 });
 
-// router.get('/tasks', auth, async (req, res) => {
-//   try {
-//     const user = await UserModel.findById(req.user.id).select('-password');
-//     res.status(200).json({ user });
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
+//! Generate JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '30d',
+  });
+};
+
+router.post('/me', auth, async (req, res) => {
+  jwt.verify(req.token, process.env.JWT_SECRET, (error, decoded) => {
+    if (error) {
+      return res.status(401).json({ msg: 'Token is not valid' });
+    } else {
+      req.user = decoded.user;
+
+      res.json(decoded.user);
+    }
+  });
+});
 
 module.exports = router;

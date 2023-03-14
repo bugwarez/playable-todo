@@ -8,8 +8,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import { addCard, getCard } from '../services/taskService.js';
 
 function EditDialog(state) {
+  const user = JSON.parse(localStorage.getItem('user'));
   console.log('state', state);
 
   //!Tags
@@ -47,6 +49,7 @@ function EditDialog(state) {
   const formState = {
     imageUrl,
     selectedImage,
+    thumbnail: imageUrl,
     tags,
     title,
     description,
@@ -56,6 +59,15 @@ function EditDialog(state) {
   const clearFormState = () => {
     setImageUrl(null), setSelectedImage(null), setTags([]), setTitle('');
     setDescription(''), setAttachment(null);
+  };
+
+  const createCard = async () => {
+    const response = await addCard({
+      ...formState,
+      owner: user._id,
+    });
+
+    return response.data;
   };
 
   return (
@@ -200,7 +212,8 @@ function EditDialog(state) {
           onClick={() => {
             state.handleClose(),
               console.log('formState', formState),
-              clearFormState();
+              clearFormState(),
+              createCard();
           }}
         >
           Create Card

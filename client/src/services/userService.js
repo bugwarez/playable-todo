@@ -1,9 +1,7 @@
 import axios from 'axios';
 const apiUrl = 'http://localhost:3005/api/users';
 
-export function getUser(id) {
-  return axios.get(apiUrl);
-}
+const user = JSON.parse(localStorage.getItem('user'));
 
 //!Register User
 export const registerUser = async (user) => {
@@ -26,3 +24,8 @@ export const loginUser = async (user) => {
 
   return response.data;
 };
+
+//!Get User
+export const getUser = async(token) =>{
+  const response = await axios.post
+}
