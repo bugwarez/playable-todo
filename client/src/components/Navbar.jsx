@@ -13,9 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const pages = ['dasboard', 'login', 'notfound'];
-const settings = ['Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -35,6 +35,8 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const navigate = useNavigate();
 
   return (
     <AppBar position='static'>
@@ -78,10 +80,13 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>
-                    <Link to={page}>{page}</Link>
-                  </Typography>
+                <MenuItem
+                  component={Link}
+                  to={`/${page}`}
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                >
+                  <Typography textAlign='center'>{page}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -111,7 +116,7 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <MenuItem
                 component={Link}
-                to={page}
+                to={`/${page}`}
                 key={page}
                 onClick={handleCloseNavMenu}
               >
@@ -142,11 +147,15 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem
+                onClick={() => {
+                  localStorage.clear(),
+                    handleCloseUserMenu(),
+                    navigate('/login');
+                }}
+              >
+                <Typography textAlign='center'>Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

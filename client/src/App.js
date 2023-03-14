@@ -19,10 +19,10 @@ class App extends Component {
       <div className='App'>
         <BrowserRouter>
           <Routes>
-            <Route index path='/' element={<Dashboard />} />
-            <Route exact path='dashboard' element={<Dashboard />} />
-            <Route exact path='login' element={<Login />} />
-            <Route exact path='register' element={<Register />} />
+            <Route index path='/' element={<Login />} />
+            <Route exact path='/dashboard' element={<Dashboard />} />
+            <Route exact path='/login' element={<Login />} />
+            <Route exact path='/register' element={<Register />} />
             <Route exact path='*' element={<NotFound />} />
           </Routes>
         </BrowserRouter>

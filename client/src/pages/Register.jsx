@@ -1,9 +1,10 @@
-import { TextField, Box, Button } from '@mui/material';
+import { TextField, Box, Button, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/userService';
 
 function Register() {
+  const [error, setError] = useState(null);
   const [values, setValues] = useState({
     fullname: '',
     email: '',
@@ -17,11 +18,15 @@ function Register() {
     });
   };
 
-  const loginUser = async () => {
-    console.log('logged in with', values);
+  const register = async () => {
+    console.log('registered in with', values);
     const response = await registerUser(values);
 
     console.log('response', response);
+
+    if (response.status === 400) {
+      setError(response.data);
+    }
 
     if (response.data) {
       localStorage.setItem('user', JSON.stringify(response.data));
@@ -82,7 +87,7 @@ function Register() {
         />
         <Button
           onClick={() => {
-            loginUser().then(() => {
+            register().then(() => {
               navigate('/dashboard');
             });
           }}
@@ -90,6 +95,7 @@ function Register() {
         >
           Kayıt Ol
         </Button>
+        <Typography>{error}</Typography>
       </Box>
     </Box>
   );

@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const simplecrypt = require('simplecrypt');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { auth } = require('../auth');
-
-var sc = simplecrypt();
 
 router.post('/register', async (req, res) => {
   const { fullname, email, password } = req.body;
@@ -17,16 +15,17 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ msg: 'User already exists' });
     }
 
+    //! Hashing password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     // create new user
     user = new User({
       fullname,
       email,
-      password,
+      password: hashedPassword,
     });
 
-    // hash user password
-
-    user.password = await sc.encrypt(password);
     await user.save();
 
     // return jwt
@@ -62,7 +61,7 @@ router.post('/login', async (req, res) => {
     }
 
     // check is the encrypted password matches
-    const isMatch = (await sc.decrypt(password)) == user.password;
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: 'Email or password incorrect' });
     }

@@ -1,5 +1,8 @@
-import { TextField, Box, Button } from '@mui/material';
+import { TextField, Box, Button, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { loginUser } from '../services/userService';
+
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [values, setValues] = useState({
@@ -12,6 +15,19 @@ function Login() {
       ...values,
       [name]: value,
     });
+  };
+  const navigate = useNavigate();
+
+  const login = async () => {
+    console.log('logged in with', values);
+
+    const response = await loginUser(values);
+
+    if (response.data) {
+      localStorage.setItem('user', JSON.stringify(response.data));
+    }
+
+    return response.data;
   };
   return (
     <Box
@@ -53,8 +69,16 @@ function Login() {
           name='password'
           label='Çok gizli şifren'
           variant='outlined'
+          type={'password'}
         />
-        <Button onClick={() => console.log(values)} variant='outlined'>
+        <Button
+          onClick={() => {
+            login().then(() => {
+              navigate('/dashboard');
+            });
+          }}
+          variant='outlined'
+        >
           Giriş Yap
         </Button>
       </Box>
