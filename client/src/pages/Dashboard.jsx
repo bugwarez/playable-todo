@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 //!Components
 import Navbar from '../components/Navbar';
-import { Box, Stack, Button, TextField } from '@mui/material';
+import { Box, Stack, Button, TextField, Grid } from '@mui/material';
 import TodoCard from '../components/TodoCard';
 import NewDialog from '../components/NewDialog';
-import { getCard } from '../services/taskService';
+import { getCard, getCardIncomplete } from '../services/taskService';
 
 function Dashboard() {
   const [open, setOpen] = React.useState(false);
@@ -26,18 +26,19 @@ function Dashboard() {
   };
 
   const user = JSON.parse(localStorage.getItem('user'));
-  console.log('user', user._id);
 
   //!Axios
   const [dataState, setDataState] = useState([]);
+  const [incompleteTasks, setIncompleteTasks] = useState([]);
 
   useEffect(() => {
-    getCard('64106cd74f918e0cb0e7fd66').then((result) => {
+    getCard(user._id).then((result) => {
       setDataState(result);
     });
-  }, []);
-
-  console.log('dataState', dataState);
+    getCardIncomplete(user._id).then((result) => {
+      setIncompleteTasks(result);
+    });
+  });
 
   return (
     <>
@@ -97,13 +98,28 @@ function Dashboard() {
               }}
               gap={2}
             >
-              {dataState.map((data, index) => {
-                const props = {
-                  data,
-                  index,
-                };
-                return <TodoCard key={index} props={props} />;
-              })}
+              <Grid container spacing={0}>
+                {incompleteTasks.map((data, index) => {
+                  const props = {
+                    data,
+                    index,
+                  };
+
+                  return (
+                    <>
+                      {incompleteTasks.length % 2 === 0 ? (
+                        <Grid item md={6}>
+                          <TodoCard key={index} props={props} />
+                        </Grid>
+                      ) : (
+                        <Grid item md={4}>
+                          <TodoCard key={index} props={props} />
+                        </Grid>
+                      )}
+                    </>
+                  );
+                })}
+              </Grid>
             </Box>
           </Stack>
         </Box>
@@ -114,11 +130,16 @@ function Dashboard() {
             width: '50%',
             height: '100%',
             padding: 5,
-            textAlign: 'start',
           }}
         >
           <Stack direction='column'>
-            <h1> Done</h1>
+            <Stack
+              direction='row'
+              alignItems='center'
+              justifyContent='space-between'
+            >
+              <h1>Done</h1>
+            </Stack>
             <Box
               sx={{
                 display: 'flex',
@@ -126,8 +147,34 @@ function Dashboard() {
               }}
               gap={2}
             >
-              {/* {exampleData.map((data, i) => {
-                return <TodoCard key={i} props={(data, i)} />;
+              <Grid container spacing={0}>
+                {dataState.map((data, index) => {
+                  const props = {
+                    data,
+                    index,
+                  };
+
+                  return (
+                    <>
+                      {dataState.length % 2 === 0 ? (
+                        <Grid item md={6}>
+                          <TodoCard key={index} props={props} />
+                        </Grid>
+                      ) : (
+                        <Grid item md={4}>
+                          <TodoCard key={index} props={props} />
+                        </Grid>
+                      )}
+                    </>
+                  );
+                })}
+              </Grid>
+              {/* {dataState.map((data, index) => {
+                const props = {
+                  data,
+                  index,
+                };
+                return <TodoCard key={index} props={props} />;
               })} */}
             </Box>
           </Stack>

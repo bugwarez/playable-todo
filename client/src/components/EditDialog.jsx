@@ -38,9 +38,6 @@ function EditDialog(state) {
     }
   }, [selectedImage]);
 
-  console.log('imageUrl', imageUrl);
-  console.log('selectedImage', selectedImage);
-
   const [cardTitle, setCardTitle] = useState(state.title);
   const [cardDescription, setCardDescription] = useState(state.description);
 

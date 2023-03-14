@@ -2,7 +2,7 @@ import axios from 'axios';
 const apiUrl = 'http://localhost:3005/api/tasks';
 const user = JSON.parse(localStorage.getItem('user'));
 
-console.log('USEER', user.token);
+console.log('USEER', user?.token);
 
 export const addCard = async (task) => {
   const response = await axios.post(apiUrl, task);
@@ -10,7 +10,16 @@ export const addCard = async (task) => {
 };
 
 export const getCard = async (id) => {
-  const response = await axios.get(apiUrl + '/' + id, { params: { id: id } });
+  const response = await axios.get(apiUrl + '/complete/' + id, {
+    params: { id: id },
+  });
+  return response.data;
+};
+
+export const getCardIncomplete = async (id) => {
+  const response = await axios.get(apiUrl + '/incomplete/' + id, {
+    params: { id: id },
+  });
   return response.data;
 };
 
@@ -21,9 +30,35 @@ export const updateCard = async (field, data) => {
     },
   });
 
-  if (response.data) {
-    localStorage.setItem('user', JSON.stringify(response.data));
-  }
+  return response.data;
+};
+export const setComplete = async (taskID) => {
+  const response = await axios.put(
+    apiUrl + '/setComplete/' + taskID,
+    {
+      completed: true,
+    },
+    {
+      headers: {
+        Authorization: 'Bearer ' + user.token,
+      },
+    }
+  );
+
+  return response.data;
+};
+export const setIncomplete = async (taskID) => {
+  const response = await axios.put(
+    apiUrl + '/setIncomplete/' + taskID,
+    {
+      completed: false,
+    },
+    {
+      headers: {
+        Authorization: 'Bearer ' + user.token,
+      },
+    }
+  );
 
   return response.data;
 };

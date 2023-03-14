@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -28,6 +28,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import EditDialog from './EditDialog';
 
+import { setComplete, setIncomplete } from '../services/taskService';
+
 export default function TodoCard(data) {
   const colors = [
     'primary',
@@ -37,9 +39,6 @@ export default function TodoCard(data) {
     'info',
     'success',
   ];
-
-  console.log('dataa', data);
-  console.log('data.props.data', data.props.data);
 
   //!Destructuring data
   const {
@@ -77,13 +76,10 @@ export default function TodoCard(data) {
     createdAt,
   };
 
-  // console.log('index', index);
-  console.log('image--', thumbnail);
-
   return (
     <>
       <EditDialog {...state} />
-      <Card sx={{ width: 300, border: '2px solid #e3e3e3' }}>
+      <Card sx={{ width: 250, border: '2px solid #e3e3e3', margin: 2 }}>
         <CardMedia
           sx={{ height: 140 }}
           component='img'
@@ -114,9 +110,9 @@ export default function TodoCard(data) {
             {tags.map((tag) => {
               return (
                 <Chip
-                  color={colors[Math.floor(Math.random() * colors.length)]}
+                  color={'primary'}
                   label={tag}
-                  variant='contained'
+                  variant='outlined'
                   size='small'
                 />
               );
@@ -133,16 +129,33 @@ export default function TodoCard(data) {
             Edit
           </Button>
 
-          <Button
-            variant='outlined'
-            color='success'
-            onClick={() => {
-              console.log(_id, completed);
-            }}
-            size='small'
-          >
-            Mark as Done
-          </Button>
+          {completed ? (
+            <Button
+              variant='outlined'
+              color='success'
+              onClick={() => {
+                setIncomplete(_id, false).then(() => {
+                  setCardState(true);
+                });
+              }}
+              size='small'
+            >
+              Mark as Incomplete
+            </Button>
+          ) : (
+            <Button
+              variant='outlined'
+              color='success'
+              onClick={() => {
+                setComplete(_id).then(() => {
+                  setCardState(true);
+                });
+              }}
+              size='small'
+            >
+              Mark as Complete
+            </Button>
+          )}
         </CardActions>
       </Card>
     </>

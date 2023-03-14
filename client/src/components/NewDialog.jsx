@@ -12,7 +12,6 @@ import { addCard, getCard } from '../services/taskService.js';
 
 function EditDialog(state) {
   const user = JSON.parse(localStorage.getItem('user'));
-  console.log('state', state);
 
   //!Tags
   const [tags, setTags] = useState([]);
@@ -38,9 +37,6 @@ function EditDialog(state) {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
   }, [selectedImage]);
-
-  console.log('imageUrl', imageUrl);
-  console.log('selectedImage', selectedImage);
 
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
@@ -226,10 +222,7 @@ function EditDialog(state) {
         </Button>
         <Button
           onClick={() => {
-            state.handleClose(),
-              console.log('formState', formState),
-              clearFormState(),
-              createCard();
+            state.handleClose(), clearFormState(), createCard();
           }}
         >
           Create Card
