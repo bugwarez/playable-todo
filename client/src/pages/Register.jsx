@@ -95,7 +95,15 @@ function Register() {
         >
           Kayıt Ol
         </Button>
-        <Typography>{error}</Typography>
+        <Button
+          color='success'
+          onClick={() => {
+            navigate('/login');
+          }}
+          variant='outlined'
+        >
+          Giriş Yap
+        </Button>
       </Box>
     </Box>
   );

@@ -31,15 +31,6 @@ import EditDialog from './EditDialog';
 import { setComplete, setIncomplete } from '../services/taskService';
 
 export default function TodoCard(data) {
-  const colors = [
-    'primary',
-    'secondary',
-    'error',
-    'warning',
-    'info',
-    'success',
-  ];
-
   //!Destructuring data
   const {
     _id,
@@ -79,7 +70,13 @@ export default function TodoCard(data) {
   return (
     <>
       <EditDialog {...state} />
-      <Card sx={{ width: 250, border: '2px solid #e3e3e3', margin: 2 }}>
+      <Card
+        sx={{
+          width: { md: 200, xl: 270 },
+          border: '2px solid #e3e3e3',
+          margin: 2,
+        }}
+      >
         <CardMedia
           sx={{ height: 140 }}
           component='img'
@@ -110,6 +107,7 @@ export default function TodoCard(data) {
             {tags.map((tag) => {
               return (
                 <Chip
+                  key={tag}
                   color={'primary'}
                   label={tag}
                   variant='outlined'

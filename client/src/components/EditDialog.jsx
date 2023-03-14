@@ -9,9 +9,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 
+import { updateCard, deleteCard } from '../services/taskService';
+
 function EditDialog(state) {
   // console.log('EditDialog state', state);
   // console.log('EditDialog state.title', state.title);
+
+  const user = JSON.parse(localStorage.getItem('user'));
 
   //!Tags
   const [tags, setTags] = useState(state.tags);
@@ -38,11 +42,42 @@ function EditDialog(state) {
     }
   }, [selectedImage]);
 
-  const [cardTitle, setCardTitle] = useState(state.title);
-  const [cardDescription, setCardDescription] = useState(state.description);
+  const [title, setTitle] = useState(state.title);
+  const [description, setDescription] = useState(state.description);
 
-  //!Attachment upload
-  const [attachmentData, setAttachmentData] = useState(state.attachment);
+  //!File Upload
+  const [attachment, setAttachment] = useState(state.attachment);
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      setAttachment(e.target.files[0]);
+    }
+  };
+
+  const formState = {
+    imageUrl,
+    selectedImage,
+    thumbnail: imageUrl,
+    tags,
+    title,
+    description,
+    attachment,
+  };
+
+  const editCard = async () => {
+    const response = await updateCard(state._id, {
+      ...formState,
+      updatedAt: new Date(),
+    });
+
+    return response.data;
+  };
+
+  const delCard = async () => {
+    const response = await deleteCard(state._id);
+
+    return response.data;
+  };
 
   return (
     <Dialog
@@ -121,9 +156,9 @@ function EditDialog(state) {
                 name='title'
                 label='Title'
                 variant='outlined'
-                value={cardTitle}
+                value={title}
                 onChange={(e) => {
-                  setCardTitle(e.target.value);
+                  setTitle(e.target.value);
                 }}
               />
               <TextField
@@ -132,12 +167,12 @@ function EditDialog(state) {
                 label='Multiline'
                 multiline
                 rows={4}
-                value={cardDescription}
+                value={description}
                 onChange={(e) => {
-                  setCardDescription(e.target.value);
+                  setDescription(e.target.value);
                 }}
               />
-              <label for='attachment'>Attachment:</label>
+              <label htmlFor='attachment'>Attachment:</label>
 
               <input type='file' id='attachment' name='attachment' />
             </Box>
@@ -180,13 +215,32 @@ function EditDialog(state) {
       </DialogContent>
       <DialogActions>
         <Button
+          variant='outlined'
+          color='error'
           onClick={() => {
-            state.handleClose(), setImageUrl(null);
+            state.handleClose();
+            delCard();
+          }}
+        >
+          Delete
+        </Button>
+        <Button
+          variant='outlined'
+          onClick={() => {
+            state.handleClose();
           }}
         >
           Cancel
         </Button>
-        <Button onClick={state.handleClose}>Edit Card</Button>
+        <Button
+          variant='outlined'
+          onClick={() => {
+            editCard();
+            state.handleClose();
+          }}
+        >
+          Edit Card
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -2,7 +2,7 @@ import axios from 'axios';
 const apiUrl = 'http://localhost:3005/api/tasks';
 const user = JSON.parse(localStorage.getItem('user'));
 
-console.log('USEER', user?.token);
+// console.log('USEER', user?.token);
 
 export const addCard = async (task) => {
   const response = await axios.post(apiUrl, task);
@@ -23,12 +23,18 @@ export const getCardIncomplete = async (id) => {
   return response.data;
 };
 
-export const updateCard = async (field, data) => {
+export const updateCard = async (id, data) => {
   const response = await axios.put(apiUrl + '/' + id, data, {
     headers: {
       Authorization: 'Bearer ' + user.token,
     },
   });
+
+  return response.data;
+};
+
+export const deleteCard = async (id) => {
+  const response = await axios.delete(apiUrl + '/' + id);
 
   return response.data;
 };

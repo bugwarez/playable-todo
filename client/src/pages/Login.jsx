@@ -81,6 +81,15 @@ function Login() {
         >
           Giriş Yap
         </Button>
+        <Button
+          color='success'
+          onClick={() => {
+            navigate('/register');
+          }}
+          variant='outlined'
+        >
+          Kayıt Ol
+        </Button>
       </Box>
     </Box>
   );

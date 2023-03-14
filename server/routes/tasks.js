@@ -86,9 +86,8 @@ router.put('/setIncomplete/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  try {
-    const task = await Task.findByIdAndDelete(req.params.id);
-  } catch (error) {}
+  const task = await Task.findByIdAndDelete(req.params.id);
+  res.status(200).json(task);
 });
 
 module.exports = router;

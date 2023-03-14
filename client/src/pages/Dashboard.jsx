@@ -7,6 +7,7 @@ import { Box, Stack, Button, TextField, Grid } from '@mui/material';
 import TodoCard from '../components/TodoCard';
 import NewDialog from '../components/NewDialog';
 import { getCard, getCardIncomplete } from '../services/taskService';
+import EditDialog from '../components/EditDialog';
 
 function Dashboard() {
   const [open, setOpen] = React.useState(false);
@@ -38,22 +39,30 @@ function Dashboard() {
     getCardIncomplete(user._id).then((result) => {
       setIncompleteTasks(result);
     });
-  });
+  }, [dataState, incompleteTasks]);
+
+  //!Searchbar
+
+  const [query, setQuery] = useState('');
+
+  const allTasks = dataState.concat(incompleteTasks);
+
+  const sleep = async (milliseconds) => {
+    await new Promise((resolve) => {
+      return setTimeout(resolve, milliseconds);
+    });
+  };
+
+  const highlight = async (id) => {
+    document.getElementById(id).style.border = '2px solid red';
+    await sleep(3000);
+    document.getElementById(id).style.border = 'none';
+  };
 
   return (
     <>
       <Navbar />
       <NewDialog {...state} />
-      <TextField
-        id='search'
-        label='Search'
-        variant='outlined'
-        name='search'
-        sx={{
-          width: '50vw',
-          marginTop: 5,
-        }}
-      />
       <Box
         sx={{
           width: '100%',
@@ -72,11 +81,22 @@ function Dashboard() {
             padding: 5,
           }}
         >
-          <Stack direction='column'>
-            <Stack
-              direction='row'
-              alignItems='center'
-              justifyContent='space-between'
+          <Stack
+            sx={{
+              width: '100%',
+            }}
+            direction='column'
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'start',
+                height: 'fit-content',
+                // background: 'red',
+                width: '100%',
+              }}
             >
               <h1>To Do</h1>
 
@@ -85,12 +105,13 @@ function Dashboard() {
                 onClick={handleClickOpen}
                 variant='outlined'
                 sx={{
-                  marginBottom: 2,
+                  marginBottom: 0,
+                  marginLeft: 2,
                 }}
               >
                 New Card
               </Button>
-            </Stack>
+            </Box>
             <Box
               sx={{
                 display: 'flex',
@@ -108,12 +129,28 @@ function Dashboard() {
                   return (
                     <>
                       {incompleteTasks.length % 2 === 0 ? (
-                        <Grid item md={6}>
-                          <TodoCard key={index} props={props} />
+                        <Grid key={index} item md={6}>
+                          <Box
+                            id={data._id}
+                            sx={{
+                              width: 'fit-content',
+                              height: 'fit-content',
+                            }}
+                          >
+                            <TodoCard id={data._id} key={index} props={props} />
+                          </Box>
                         </Grid>
                       ) : (
-                        <Grid item md={4}>
-                          <TodoCard key={index} props={props} />
+                        <Grid id={data._id} key={index} item md={4}>
+                          <Box
+                            id={data._id}
+                            sx={{
+                              width: 'fit-content',
+                              height: 'fit-content',
+                            }}
+                          >
+                            <TodoCard id={data._id} key={index} props={props} />
+                          </Box>
                         </Grid>
                       )}
                     </>
@@ -157,12 +194,28 @@ function Dashboard() {
                   return (
                     <>
                       {dataState.length % 2 === 0 ? (
-                        <Grid item md={6}>
-                          <TodoCard key={index} props={props} />
+                        <Grid key={index} item md={6}>
+                          <Box
+                            id={data._id}
+                            sx={{
+                              width: 'fit-content',
+                              height: 'fit-content',
+                            }}
+                          >
+                            <TodoCard id={data._id} key={index} props={props} />
+                          </Box>
                         </Grid>
                       ) : (
-                        <Grid item md={4}>
-                          <TodoCard key={index} props={props} />
+                        <Grid key={index} item md={4}>
+                          <Box
+                            id={data._id}
+                            sx={{
+                              width: 'fit-content',
+                              height: 'fit-content',
+                            }}
+                          >
+                            <TodoCard id={data._id} key={index} props={props} />
+                          </Box>
                         </Grid>
                       )}
                     </>
@@ -178,6 +231,89 @@ function Dashboard() {
               })} */}
             </Box>
           </Stack>
+        </Box>
+      </Box>
+      <hr />
+
+      <Box
+        sx={{
+          width: '100%',
+          // background: 'red',
+          height: '15vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 5,
+        }}
+      >
+        <Box
+          sx={{
+            width: '50%',
+            // background: 'green',
+            height: '15vh',
+          }}
+        >
+          <TextField
+            id='search'
+            label='Search'
+            variant='outlined'
+            name='search'
+            sx={{
+              width: '50vw',
+              marginTop: 5,
+            }}
+            onChange={(event) => setQuery(event.target.value)}
+            value={query}
+          />
+
+          {allTasks
+            .filter((card) => {
+              if (!query) {
+                return;
+              } else if (
+                card.title.toLowerCase().includes(query.toLowerCase())
+              ) {
+                return card;
+              }
+            })
+            .map((card, index) => (
+              <Box
+                onClick={() => {
+                  highlight(card._id);
+                }}
+                sx={{
+                  padding: 0,
+                  border: '1px solid black',
+                  borderRadius: 2,
+                  position: 'relative',
+                  background: 'white',
+                }}
+                className='box'
+                key={card._id}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <p>{card._id}</p>
+                    <p>{card.title}</p>
+                    <p>{card.description}</p>
+                  </Box>
+                </Box>
+              </Box>
+            ))}
         </Box>
       </Box>
     </>

@@ -214,6 +214,7 @@ function EditDialog(state) {
       </DialogContent>
       <DialogActions>
         <Button
+          variant='outlined'
           onClick={() => {
             state.handleClose(), clearFormState();
           }}
@@ -221,6 +222,7 @@ function EditDialog(state) {
           Cancel
         </Button>
         <Button
+          variant='outlined'
           onClick={() => {
             state.handleClose(), clearFormState(), createCard();
           }}
