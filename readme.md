@@ -6,6 +6,9 @@ Bu proje Playable Factory Software Engineer Case Study uygulaması için gelişt
 
 Öncelikle selamlar. Projenin 1. günü (14 mart) tarihinde doğum günüm olduğu için o gün çok fazla proje üzerine çalışamadım ancak daha fazla vakit istemiyorum ve elimden geldiğince kısa sürede geliştirmek istedim. Projeyi geliştirirken optimize ve production-ready bir yapıdan çok, olabildiğince fazla task yapmaya çalıştım. bu sebeple optimizasyon ve diğer konularda büyük problemler olabilir.
 
+# Video Anlatımı
+https://www.loom.com/share/12186bdb9bba499ea77115a57f193148
+
 # Proje Kurulumu
 
 Adım 1: Projeyi github'dan clonelayın.
