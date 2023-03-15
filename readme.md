@@ -46,3 +46,9 @@ proje dosyası/server -> npm run dev
 ```
 ![Screenshot](https://raw.github.com/sirmacr0/playable-todo/master/Screenshots/ss_2.png)
 ![Screenshot](https://raw.github.com/sirmacr0/playable-todo/master/Screenshots/ss_3.png)
+
+
+# Notlar
+-Projenin veritabanı kendi mongodb hesabımın free tier veritabanı.
+-User kısmı manuel değildir. İstediğiniz gibi kaydolup test edebilirsiniz.
+-Imageupload ve fileupload kısımlarına zaman yetmediği için bu şekilde teslim edildi. Bu amaç için Nodejs Multer kütüphanesi indirlip kuruldu ancak bitirilemedi.
