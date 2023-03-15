@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 //!Components
 import Navbar from '../components/Navbar';
-import { Box, Stack, Button, TextField, Grid } from '@mui/material';
+import { Box, Stack, Button, TextField, Grid, Typography } from '@mui/material';
 import TodoCard from '../components/TodoCard';
 import NewDialog from '../components/NewDialog';
 import { getCard, getCardIncomplete } from '../services/taskService';
@@ -275,6 +275,13 @@ function Dashboard() {
                 card.title.toLowerCase().includes(query.toLowerCase())
               ) {
                 return card;
+              } else if (
+                query.includes('tag:') &&
+                card.tags.map((element) => {
+                  return element.toLowerCase().includes(query.toLowerCase());
+                })
+              ) {
+                return card;
               }
             })
             .map((card, index) => (
@@ -307,9 +314,13 @@ function Dashboard() {
                       alignItems: 'center',
                     }}
                   >
-                    <p>{card._id}</p>
-                    <p>{card.title}</p>
-                    <p>{card.description}</p>
+                    {/* <Typography variant='body2'>{card._id}</Typography> */}
+                    <Typography gutterBottom variant='body2'>
+                      {card.title}
+                    </Typography>
+                    <Typography gutterBottom variant='body2'>
+                      {card.description}
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
