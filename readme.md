@@ -1,13 +1,4 @@
-![Screenshot](https://playablefactory.com/wp-content/uploads/2022/01/animated_dark_with_title_logo_pf.gif)
-
-# Playable Todo
-
-Bu proje Playable Factory Software Engineer Case Study uygulaması için geliştirilmiştir.
-
-Öncelikle selamlar. Projenin 1. günü (14 mart) tarihinde doğum günüm olduğu için o gün çok fazla proje üzerine çalışamadım ancak daha fazla vakit istemiyorum ve elimden geldiğince kısa sürede geliştirmek istedim. Projeyi geliştirirken optimize ve production-ready bir yapıdan çok, olabildiğince fazla task yapmaya çalıştım. bu sebeple optimizasyon ve diğer konularda büyük problemler olabilir.
-
-# Video Anlatımı
-https://www.loom.com/share/12186bdb9bba499ea77115a57f193148
+# To Do WebApp
 
 # Proje Kurulumu
 
@@ -49,9 +40,3 @@ proje dosyası/server -> npm run dev
 ```
 ![Screenshot](https://raw.github.com/sirmacr0/playable-todo/master/Screenshots/ss_2.png)
 ![Screenshot](https://raw.github.com/sirmacr0/playable-todo/master/Screenshots/ss_3.png)
-
-
-# Notlar
--Projenin veritabanı kendi mongodb hesabımın free tier veritabanı.
--User kısmı manuel değildir. İstediğiniz gibi kaydolup test edebilirsiniz.
--Imageupload ve fileupload kısımlarına zaman yetmediği için bu şekilde teslim edildi. Bu amaç için Nodejs Multer kütüphanesi indirlip kuruldu ancak bitirilemedi.
